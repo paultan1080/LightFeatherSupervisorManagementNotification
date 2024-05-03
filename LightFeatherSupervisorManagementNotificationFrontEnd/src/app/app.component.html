@@ -1,0 +1,94 @@
+<div class="bg-gray-700 p-5 text-center">
+    <h1 class="text-lg font-semibold text-black">Notification Form</h1>
+</div>
+<div class="bg-gray-300 p-8 flex justify-center">
+    @if(isFormSubmmittedSuccessfully) {
+    <div class="bg-gray-300 p-8 text-center">
+        <div class="space-y-4">
+            <h2 class="text-lg font-semibold text-green-600">Notification Submitted Successfully!</h2>
+            <p class="text-gray-700">Your notification has been successfully sent.</p>
+            <button (click)="isFormSubmmittedSuccessfully = false" class="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700">
+                Submit Another Notification
+            </button>
+        </div>
+    </div>
+    }
+    @else {
+    <form [formGroup]="notificationForm" (ngSubmit)="onSubmit()" class="space-y-4 max-w-xs">
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                <input formControlName="firstName" type="text" id="firstName" class="mt-1 block w-full rounded-sm border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                @if(notificationForm.hasError('required', 'firstName') && notificationForm.get('firstName')?.touched) {
+                    <p class="mt-1 text-sm text-red-500">First name is required</p>
+                }
+            </div>
+            <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                <input formControlName="lastName" type="text" id="lastName" class="mt-1 block w-full rounded-sm border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                @if(notificationForm.hasError('required', 'lastName') && notificationForm.get('lastName')?.touched) {
+                    <p class="mt-1 text-sm text-red-500">Last name is required</p>
+                }
+            </div>
+        </div>
+
+        <div class="text-left">
+            <p class="text-sm font-medium text-gray-700">How would you like to be notified?</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex items-center">
+                <input formControlName="emailEnabled" id="emailCheckbox" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded-sm">
+                <label for="emailCheckbox" class="ml-2 block text-sm font-medium text-gray-700">Email</label>
+            </div>
+            <div class="flex items-center">
+                <input formControlName="phoneEnabled" id="phoneCheckbox" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded-sm">
+                <label for="phoneCheckbox" class="ml-2 block text-sm font-medium text-gray-700">Phone number</label>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <input formControlName="email" type="text" id="email" class="block w-full rounded-sm border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Email">
+                @if(notificationForm.hasError('required', 'email') && notificationForm.get('email')?.touched) {
+                    <p class="mt-1 text-sm text-red-500">Email is required when enabled</p>
+                }
+            </div>
+            <div>
+                <input formControlName="phoneNumber" type="text" id="phoneNumber" class="block w-full rounded-sm border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Phone number">
+                @if(notificationForm.hasError('required', 'phoneNumber') && notificationForm.get('phoneNumber')?.touched) {
+                    <p class="mt-1 text-sm text-red-500">Phone number is required when enabled</p>
+                }
+            </div>
+        </div>
+
+        <div class="text-center">
+            <label for="supervisor" class="block text-sm font-medium text-gray-700">Supervisor</label>
+            <select formControlName="supervisor" id="supervisor" class="mt-1 block w-1/2 mx-auto rounded-sm border border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-1">
+                <option value="">Select Supervisor</option>
+                @for(supervisor of supervisors; track $index) {
+                <option [value]="supervisor">{{supervisor}}</option>
+                }
+            </select>
+            @if(notificationForm.hasError('required', 'supervisor') && notificationForm.get('supervisor')?.touched) {
+                <p class="mt-1 text-sm text-red-500">Supervisor selection is required</p>
+            }
+        </div>
+
+        <!-- Display server-side validation errors -->
+        @if(serverSideFormErrors.length > 0) {
+            <div class="error-messages">
+            <ul>
+                @for(error of serverSideFormErrors; track $index) {
+                    <li class="text-red-500">{{ error }}</li>
+                }
+            </ul>
+            </div>
+        }
+
+        <div class="text-center">
+            <button type="submit" class="w-1/4 px-4 py-2 font-medium text-white bg-blue-600 rounded-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50" [class.button-disabled]="notificationForm.invalid" [disabled]="notificationForm.invalid">Submit</button>
+        </div>
+    </form>
+    }
+</div>
